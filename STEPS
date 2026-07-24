@@ -1,0 +1,33 @@
+TEMPORARY DOCUMENT FOR LATA
+
+make frontend literally just any gui for now
+
+- probably do a js/react thing
+
+figure out how to create dockerfile for postgres
+figure out how to create dockerfile for frontend
+figure out how to make a dockercompose to run both dockerfiles
+
+- maybe do some fun and do volumes to allow saving between runs
+
+create a requirements.txt for py idk
+create a way to run docker compose with frontend and backend in one command to streamline process into ideally one command
+
+-
+
+users
+
+- name
+- email
+- password
+- id ? email is pseudoid
+- token but those are generated with expiry but idk how uniqueness applies
+-
+
+todo
+
+- title
+- description
+- id
+- user tied to
+-

@@ -1,0 +1,1 @@
+#probaly will rename stuff but this is the frontend to actually implement the backend api; kinda similar to tests if u think about it lol
