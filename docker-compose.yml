@@ -1,7 +1,7 @@
 services:
   db:
     image: postgres:16-alpine
-    container_name: dev_postgres
+    container_name: dev_db
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
@@ -16,7 +16,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile.dev
-    container_name: dev_fastapi
+    container_name: dev_frontend
     ports:
       - "127.0.0.1:8000:8000"
     environment:
@@ -30,7 +30,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile.dev
-    container_name: dev_react
+    container_name: dev_backend
     ports:
       - "127.0.0.1:5173:5173"
     volumes:
