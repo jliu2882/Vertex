@@ -1,33 +1,16 @@
 TEMPORARY DOCUMENT FOR LATA
 
-make frontend literally just any gui for now
+docker build -t my-app-image .
+-t my-app-image: Tags your custom image with a memorable name (my-app-image) so you do not have to copy long ID numbers..: Points to the current directory. Do not forget this dot; it tells Docker where to find the file.
 
-- probably do a js/react thing
+get frontned backend working
+comprehend the good stuff
+figure out how to get ti running individually and sepasrarl7y4e
+this involves getting a pkacage.json
 
-figure out how to create dockerfile for postgres
-figure out how to create dockerfile for frontend
-figure out how to make a dockercompose to run both dockerfiles
+get postgres up and therefore get a decent .env file
+react is totally nothing burger should reformat as pleases
+backend structure should be good but can fix the life
 
-- maybe do some fun and do volumes to allow saving between runs
-
-create a requirements.txt for py idk
-create a way to run docker compose with frontend and backend in one command to streamline process into ideally one command
-
--
-
-users
-
-- name
-- email
-- password
-- id ? email is pseudoid
-- token but those are generated with expiry but idk how uniqueness applies
--
-
-todo
-
-- title
-- description
-- id
-- user tied to
--
+redo readme to be something i understand
+want onestep way to run both, maybe a way to run locally, want to showboat a bit

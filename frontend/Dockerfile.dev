@@ -1,0 +1,17 @@
+# [Docker Keyword] Standard lightweight Linux base package optimized for executing Node.js
+FROM node:20-alpine
+
+# [Docker Keyword] Declares the primary directory container commands execute within
+WORKDIR /app
+
+# [Docker Keyword] Copies dependency manifests first to ensure fast caching when source code shifts
+COPY package*.json ./
+
+# [Docker Keyword] Executes package download internally
+RUN npm install
+
+# [Docker Keyword] Documents internal communication channel on Vite's default dev environment port
+EXPOSE 5173
+
+# [Docker Keyword] Executes Vite's runner, forcing it to allow external container port forwarding via '--host'
+CMD ["npm", "run", "dev", "--", "--host"]

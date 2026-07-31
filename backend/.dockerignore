@@ -1,0 +1,23 @@
+# Ignore local python virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# Ignore python compiled byte-code cache folders
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore local environment files and logs
+.env
+*.log
+
+# Ignore OS-specific meta files
+.DS_Store
+Thumbs.db
+
+# Ignore IDE configuration directories
+.vscode/
+.idea/
