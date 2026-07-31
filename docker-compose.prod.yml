@@ -16,7 +16,8 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: prod_frontend
+    image: fastapi
+    container_name: prod_backend
     ports:
       - "127.0.0.1:8000:8000"
     environment:
@@ -28,7 +29,8 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: prod_backend
+    image: react
+    container_name: prod_frontend
     ports:
       - "127.0.0.1:80:80"
     depends_on:

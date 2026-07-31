@@ -16,7 +16,8 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile.dev
-    container_name: dev_frontend
+    image: fastapi
+    container_name: dev_backend
     ports:
       - "127.0.0.1:8000:8000"
     environment:
@@ -30,7 +31,8 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile.dev
-    container_name: dev_backend
+    image: react
+    container_name: dev_frontend
     ports:
       - "127.0.0.1:5173:5173"
     volumes:
