@@ -15,6 +15,5 @@ CREATE TABLE IF NOT EXISTS tasks (
     user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     title VARCHAR(255) NOT NULL,
     task_description TEXT,
-    completed BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
