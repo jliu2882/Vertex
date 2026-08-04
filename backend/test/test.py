@@ -20,12 +20,12 @@ def test_register_login_and_todo_lifecycle():
         "name": "Demo User",
         "password": "supersecret",
     }
-    response = client.post("/accounts/register", json=register_payload)
+    response = client.post("/users/register", json=register_payload)
     assert response.status_code == 201
     assert response.json() == {"message": "User registered successfully"}
 
     login_payload = {"email": "user@example.com", "password": "supersecret"}
-    response = client.post("/accounts/login", json=login_payload)
+    response = client.post("/users/login", json=login_payload)
     assert response.status_code == 200
     token_data = response.json()
     assert token_data["token_type"] == "bearer"

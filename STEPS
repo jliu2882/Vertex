@@ -1,16 +1,6 @@
-TEMPORARY DOCUMENT FOR LATA
-
-docker build -t my-app-image .
--t my-app-image: Tags your custom image with a memorable name (my-app-image) so you do not have to copy long ID numbers..: Points to the current directory. Do not forget this dot; it tells Docker where to find the file.
-
-get frontned backend working
-comprehend the good stuff
-figure out how to get ti running individually and sepasrarl7y4e
-this involves getting a pkacage.json
-
-get postgres up and therefore get a decent .env file
 react is totally nothing burger should reformat as pleases
 backend structure should be good but can fix the life
 
-redo readme to be something i understand
-want onestep way to run both, maybe a way to run locally, want to showboat a bit
+Implement error handling and security measures [probably vscode to scan project]
+implement refresh tokens vs just one token for authentication (a frequently used that expires and needs refreshing, and "big" token for entire session)
+compare project with other implementation

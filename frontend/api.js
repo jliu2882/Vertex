@@ -43,25 +43,25 @@ async function request(path, { token = '', method = 'GET', body = null } = {}) {
 }
 
 export async function login(credentials) {
-  return request('/accounts/login', {
+  return request('/users/login', {
     method: 'POST',
     body: JSON.stringify(credentials),
   });
 }
 
 export async function registerUser(payload) {
-  return request('/accounts/register', {
+  return request('/users/register', {
     method: 'POST',
     body: JSON.stringify(payload),
   });
 }
 
 export async function fetchTodos(token) {
-  return request('/todos', { token, method: 'GET' });
+  return request('/tasks', { token, method: 'GET' });
 }
 
 export async function createTodo(token, payload) {
-  return request('/todos', {
+  return request('/tasks', {
     token,
     method: 'POST',
     body: JSON.stringify(payload),
@@ -69,7 +69,7 @@ export async function createTodo(token, payload) {
 }
 
 export async function updateTodo(token, todoId, payload) {
-  return request(`/todos/${todoId}`, {
+  return request(`/tasks/${todoId}`, {
     token,
     method: 'PUT',
     body: JSON.stringify(payload),
@@ -77,7 +77,7 @@ export async function updateTodo(token, todoId, payload) {
 }
 
 export async function deleteTodo(token, todoId) {
-  return request(`/todos/${todoId}`, {
+  return request(`/tasks/${todoId}`, {
     token,
     method: 'DELETE',
   });

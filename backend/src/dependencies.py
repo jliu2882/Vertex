@@ -1,40 +1,42 @@
-﻿from datetime import datetime
-
-import httpx
-from fastapi import Depends, HTTPException, Request, status
+﻿import os
+from fastapi import Depends, Request
 from fastapi.security import OAuth2PasswordBearer
+import asyncpg
+
 from slowapi import Limiter
 from slowapi.util import get_remote_address
 
-limiter = Limiter(key_func=get_remote_address)
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/accounts/login")
+from services.users import decode_jwt_token
 
+db_pool = None
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
 
-def get_http_client(request: Request) -> httpx.AsyncClient:
-    """
-    Return the shared httpx AsyncClient instance from app state.
-    """
-    return request.app.state.http_client
+requestLimiter = Limiter(key_func=get_remote_address)
 
+async def get_db():
+    """
+    Add a paramater "db: asyncpg.Connection = Depends(get_db)," to allow access to an async connection to the database.
 
-async def get_db(request: Request):
+    Usage:
+        db.fetchrow, db.fetch, db.fetchval, db.execute...
+        db.fetchrow(query, [...])
     """
-    Placeholder dependency for a database session.
-    This can be expanded later with a real database connection.
-    """
-    yield None
+    global db_pool
+    if db_pool is None:
+        database_url = os.getenv("DATABASE_URL")
+        db_pool = await asyncpg.create_pool(dsn=database_url)
 
+    async with db_pool.acquire() as connection:
+        yield connection
 
-async def get_current_user(token: str = Depends(oauth2_scheme), request: Request = None):
+async def get_current_user_id(
+    token: str = Depends(oauth2_scheme), 
+    db: asyncpg.Connection = Depends(get_db)
+):
+    """Add a paramater "current_user_id: int = Depends(get_current_user_id)," to check current user against the task owner"""
+    username = decode_jwt_token(token)
+    query = """
+        SELECT id FROM users WHERE username = $1
     """
-    Authenticate requests using bearer tokens stored in app state.
-    """
-    token_store = getattr(request.app.state, "token_store", {})
-    token_data = token_store.get(token)
-    if not token_data or token_data["expires_at"] < datetime.utcnow():
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid or expired token",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-    return token_data["user"]
+    user = await db.fetchrow(query, username)
+    return int(user["id"]) 
