@@ -3,7 +3,7 @@ should try to best highlight skills used in this project (domain driven vs layer
 
     [list specific technologies used and find llm to best bloat it up so can trim to highlight most impressive feats]
 
-include steps to run as well as steps to debug (docker compose logs and run sql commands directly)
+include steps to run prod/dev as well as steps to debug (docker compose logs and run sql commands directly)
 include postman/docker urls and basic steps to test thing [need to save token and put them in auth etc...]
 
     postgresql://todo_admin:secure_dev_password_2026@db:5432/todo_app_db
