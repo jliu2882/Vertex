@@ -1,20 +1,2 @@
-# Ignore local node packages (Crucial for preventing cross-OS build breaks)
 node_modules/
-
-# Ignore local compilation build outputs
 dist/
-build/
-
-# Ignore package manager error and debug logs
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-
-# Ignore OS-specific meta files
-.DS_Store
-Thumbs.db
-
-# Ignore IDE configuration directories
-.vscode/
-.idea/

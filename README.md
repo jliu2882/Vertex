@@ -11,6 +11,10 @@ include postman/docker urls and basic steps to test thing [need to save token an
     postgresql://todo_admin:secure_dev_password_2026@db:5432/todo_app_db
     http://127.0.0.1:8000/tasks/test
 
+
+    cd backend and then
+    python -m pytest -q // test/test_endpoints.py // -k login
+
 # Enterprise Asynchronous To-Do Ecosystem 🚀
 
 A highly responsive, production-ready full-stack To-Do application engineered with a modern distributed architecture. This ecosystem showcases a decoupled React client interacting with an asynchronous Python API gateway, backed by a persistent relational database container.

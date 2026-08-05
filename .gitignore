@@ -1,4 +1,4 @@
-#only if needed
 .env
 __pycache__/
+dist
 node_modules

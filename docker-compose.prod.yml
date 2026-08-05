@@ -32,6 +32,8 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+    args:
+      VITE_API_URL: ${VITE_API_URL}
     image: react
     container_name: prod_frontend
     ports:
