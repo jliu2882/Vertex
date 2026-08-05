@@ -1,4 +1,4 @@
-from typing import Optional, Any
+from typing import List, Optional, Any
 from pydantic import BaseModel, Field, ConfigDict, model_validator
 
 class TaskBase(BaseModel):
@@ -23,6 +23,15 @@ class TaskResponse(TaskBase):
         if type(data).__name__ == "Record": 
             return dict(data)
         return data
+
+class TaskListResponse(BaseModel):
+    items: List[TaskResponse]
+    page: int
+    limit: int
+    total: int
+    total_pages: int
+
+    model_config = ConfigDict(from_attributes=True)
 
 class TaskUpdate(BaseModel):
     title: Optional[str] = Field(default=None, min_length=1, max_length=255)

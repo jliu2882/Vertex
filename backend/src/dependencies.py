@@ -1,5 +1,5 @@
 ﻿import os
-from fastapi import Depends, Request
+from fastapi import Depends, HTTPException, Request, status
 from fastapi.security import OAuth2PasswordBearer
 import asyncpg
 
@@ -39,4 +39,10 @@ async def get_current_user_id(
         SELECT id FROM users WHERE username = $1
     """
     user = await db.fetchrow(query, username)
+    if user is None or user.get("id") is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Could not validate credentials",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
     return int(user["id"]) 

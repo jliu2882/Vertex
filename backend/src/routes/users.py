@@ -25,7 +25,7 @@ async def register_user(
     except asyncpg.exceptions.UniqueViolationError:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Email or username already registered")
     
-    return {"token": generate_oauth2_token_response(payload.username)}
+    return generate_oauth2_token_response(payload.username)
 
 @router.post("/login", status_code=status.HTTP_201_CREATED)
 @requestLimiter.limit("60/minute")
@@ -42,4 +42,4 @@ async def login_user(
     if (user is None or not verify_password(payload.password, user["password_hash"])):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
     
-    return {"token": generate_oauth2_token_response(user["username"])}
+    return generate_oauth2_token_response(user["username"])
