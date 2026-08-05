@@ -17,3 +17,6 @@ CREATE TABLE IF NOT EXISTS tasks (
     task_description TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+-- 3. Index for fast lookups of a user's tasks
+CREATE INDEX IF NOT EXISTS idx_tasks_user_id ON tasks(user_id);

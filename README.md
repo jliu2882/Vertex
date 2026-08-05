@@ -2,6 +2,8 @@ rewrite in own words; probably ok to use llms to help with learning the right la
 should try to best highlight skills used in this project (domain driven vs layered architecture[schemas/tasks vs tasks/schemas])
 
     [list specific technologies used and find llm to best bloat it up so can trim to highlight most impressive feats]
+    [another thing to talk about isnt just what they are good at, but why i choose them over other technologies]
+    [a "reason" for a specific technology could be the impact they ehave numbers wise (redis reduce respoinse time by 40% etc..)]
 
 include steps to run prod/dev as well as steps to debug (docker compose logs and run sql commands directly)
 include postman/docker urls and basic steps to test thing [need to save token and put them in auth etc...]
