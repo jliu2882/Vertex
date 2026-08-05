@@ -8,7 +8,7 @@ export const LandingPage: React.FC = () => {
     <div className="page-shell">
       <div className="auth-card">
         <span className="page-badge">Task flow</span>
-        <h1 className="page-title">Stay on top of your day</h1>
+        <h1 className="page-title">Stay on top of your day!</h1>
         <p className="page-subtitle">
           Organize your ideas, set priorities, and keep your plans moving forward.
         </p>
