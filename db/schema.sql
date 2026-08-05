@@ -1,5 +1,3 @@
--- db/schema.sql
-
 -- 1. Create the Users Table
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
