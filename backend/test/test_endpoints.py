@@ -128,6 +128,24 @@ class FakeDB:
             return [task for task in self.tasks if task["user_id"] == user_id]
         return []
 
+    async def fetchval(self, query, *args):
+        query_text = query.strip()
+        if query_text.startswith("SELECT COUNT(*) FROM tasks WHERE user_id = $1"):
+            user_id = args[0]
+            if len(args) > 1:
+                search_term = str(args[1]).lower()
+                return sum(
+                    1
+                    for task in self.tasks
+                    if task["user_id"] == user_id
+                    and (
+                        search_term in task["title"].lower()
+                        or search_term in task["task_description"].lower()
+                    )
+                )
+            return sum(1 for task in self.tasks if task["user_id"] == user_id)
+        return 0
+
 
 @pytest.fixture
 def client():
@@ -197,7 +215,8 @@ def test_task_crud_endpoints_work(client):
 
     list_response = client.get("/tasks")
     assert list_response.status_code == 200
-    tasks = list_response.json()
+    payload = list_response.json()
+    tasks = payload["items"]
     assert len(tasks) == 1
     assert tasks[0]["title"] == "Buy milk"
 
@@ -208,14 +227,15 @@ def test_task_crud_endpoints_work(client):
     assert update_response.status_code == 200
 
     updated_list = client.get("/tasks").json()
-    assert updated_list[0]["title"] == "Buy bread"
-    assert updated_list[0]["task_description"] == "Fresh bread"
+    assert updated_list["items"][0]["title"] == "Buy bread"
+    assert updated_list["items"][0]["task_description"] == "Fresh bread"
 
     delete_response = client.delete(f"/tasks/{created_task['id']}")
     assert delete_response.status_code == 204
 
     final_list = client.get("/tasks").json()
-    assert final_list == []
+    assert final_list["items"] == []
+    assert final_list["total"] == 0
 
 
 def test_tasks_endpoint_rejects_invalid_token(client):
