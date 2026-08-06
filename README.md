@@ -1,148 +1,100 @@
-rewrite in own words; probably ok to use llms to help with learning the right language and words to use
-should try to best highlight skills used in this project (domain driven vs layered architecture[schemas/tasks vs tasks/schemas])
+# Vertex
 
-    [list specific technologies used and find llm to best bloat it up so can trim to highlight most impressive feats]
-    [another thing to talk about isnt just what they are good at, but why i choose them over other technologies]
-    [a "reason" for a specific technology could be the impact they ehave numbers wise (redis reduce respoinse time by 40% etc..)]
+A full-stack task management app built with React/TypeScript, FastAPI, and PostgreSQL. I built it to practice patterns you'd actually see in a production codebase — JWT authentication, async database access, containerized dev/prod environments, and a layered backend structure — rather than just another CRUD tutorial project.
 
-include steps to run prod/dev as well as steps to debug (docker compose logs and run sql commands directly)
-include postman/docker urls and basic steps to test thing [need to save token and put them in auth etc...]
+## Tech Stack
 
-    postgresql://todo_admin:secure_dev_password_2026@db:5432/todo_app_db
-    http://127.0.0.1:8000/tasks/test
+**Frontend**
 
+- React + TypeScript
+- Vite (dev server / build tool)
+- TanStack Query, with Devtools enabled in dev (server state, caching, refetching)
+- React Router
 
-    cd backend and then
-    python -m pytest -q // test/test_endpoints.py // -k login
+**Backend**
 
-# Enterprise Asynchronous To-Do Ecosystem 🚀
+- FastAPI (async Python web framework)
+- Uvicorn (ASGI server that runs FastAPI, with `--reload` in dev)
+- Pydantic (request/response validation — powers the `schemas/` models)
+- asyncpg (direct async PostgreSQL driver — no ORM)
+- PyJWT + bcrypt (auth)
+- slowapi (rate limiting)
 
-A highly responsive, production-ready full-stack To-Do application engineered with a modern distributed architecture. This ecosystem showcases a decoupled React client interacting with an asynchronous Python API gateway, backed by a persistent relational database container.
+**Infrastructure**
 
----
+- PostgreSQL 16
+- Docker Compose (separate dev and prod configurations)
+- Nginx (serves the production frontend build)
 
-## 🛠️ Complete Technology Stack Matrix
+**Testing & Tooling**
 
-This project leverages industry-standard tools divided into specialized layers to ensure high throughput, security, and developer velocity:
+- pytest + FastAPI's `TestClient` (backend tests, with DB/auth dependencies swapped out via dependency overrides)
+- Vitest + React Testing Library (frontend component tests)
+- ESLint + TypeScript (linting and type checking)
+- Postman (manual API testing/exploration during development)
 
-### ⚛️ Frontend Tier
+## Architecture
 
-- **React (JavaScript):** Component-driven interface layer rendering a highly responsive, real-time user workspace.
-- **Vite Engine (Development):** Serves as a lightning-fast local development server utilizing Native ESM to provide near-instant Hot Module Replacement (HMR).
-- **Nginx Server (Production):** A high-performance, reverse-proxy web server used in production to host and deliver compiled, minified static React bundles with minimal memory overhead.
+### Layered backend structure
 
-### 🐍 Backend API Gateway
+The backend is organized by technical layer rather than by feature. I went with layered architecture because I anticipated the project would only have two resources that are deeply coupled, and the separation by layer makes development faster and easier to work with as a solo developer.
 
-- **FastAPI Framework:** High-performance Python framework leveraging native asynchronous concurrency (`async/await`) for near-zero network latency.
-- **Uvicorn:** A lightning-fast ASGI web server implementation used to run and reload the FastAPI application.
-- **Slowapi Middleware:** Advanced token-bucket rate limiting applied directly to endpoint decorators, protecting backend routes from algorithmic spam and DDoS vectors.
+If I were expecting the project to grow either in resources or in developers, I would go with a domain-driven architecture that colocates everything for a given resource together to allow for easier collaboration.
 
-### 🗄️ Persistence & Infrastructure
+### Auth flow
 
-- **PostgreSQL 16:** Industrial-grade relational database running an isolated Alpine Linux instance to maintain transactional data integrity.
-- **Docker & Docker Compose:** Multi-service application isolation layers enforcing absolute environment parity across your local machine and cloud servers.
+- Passwords are hashed with **bcrypt** before being stored — plaintext passwords never touch the database.
+- On login/register, the backend issues a **JWT** (via PyJWT) containing the username and an expiry, returned in the OAuth2-standard `{ access_token, token_type }` shape so it plugs directly into FastAPI's built-in Swagger auth UI.
+- Protected routes depend on `get_current_user_id`, which decodes the token and re-verifies the user still exists in the database on every request — rather than trusting the token payload blindly.
+- `slowapi` rate limits are applied per-route, e.g. 60 requests/minute per client IP on registration, login, and task listing, to blunt basic brute-force and scraping attempts.
 
----
+### Async database access without an ORM
 
-## 🔒 Security & Decoupled Secret Architecture
+Data access uses `asyncpg` directly with a connection pool and hand-written SQL, instead of an ORM like SQLAlchemy. I wanted to work directly with connection pooling and parameterized queries rather than have that abstracted away — it also means query performance and behavior are fully visible rather than depending on how an ORM decides to generate SQL. The trade-off is more boilerplate per query and manual responsibility for avoiding SQL injection (handled here via parameterized queries throughout, e.g. `$1`, `$2` placeholders — no string interpolation into SQL).
 
-To ensure project code satisfies strict security metrics, all private database passwords and admin keys are abstracted away from configuration manifests.
+### Data model
 
-A root-level `.env` file serves as the singular source of truth. At container runtime, the Docker engine safely references this file to inject credential values directly into the target environments' temporary system memory (RAM). This prevents private passwords from leaking to version control platforms or public GitHub repositories.
+Two tables: `users` and `tasks`, with `tasks.user_id` referencing `users.id` (cascading delete) and an index on `tasks.user_id` for fast per-user lookups. Task ownership is enforced at the service layer (`verify_task_owner`) on every update/delete, not just at query time — so a user can't act on another user's task even if they guess an ID.
 
----
+## Setup
 
-## 🏁 Complete Lifecycle Setup Guide
+### Requirements
 
-Follow these steps in chronological order to initialize your codebases, generate automated blueprints, and orchestrate the full-stack container environment.
+- Docker Desktop
+- Node.js 20+
+- Python 3.11+
 
-### Step 1: Bootstrap Application Folders & Blueprints
+### Environment variables
 
-Before launching Docker, we must generate the initial application folders, the JavaScript dependency blueprint (`package.json`), and the Python requirement file (`requirements.txt`).
+Clone .env.example to create .env and enter appropriate values for each variable.
 
-1. Open your native machine terminal in your empty root project directory (`my-project/`).
-2. Execute the initialization script to automatically create your frontend folder, baseline React scripts, and your **`package.json`** file all at once using Vite:
-   ```bash
-   npm create vite@latest frontend -- --template react
-   ```
-3. Generate your backend subfolder framework:
-   ```bash
-   mkdir backend
-   ```
-4. Create a plain text file named precisely **`requirements.txt`** inside that new `/backend` folder, and populate it with your core Python libraries:
-   ```text
-   fastapi==0.115.0
-   uvicorn==0.30.6
-   slowapi==0.1.9
-   psycopg2-binary==2.9.9
-   ```
+## Getting Started
 
-### Step 2: Configure Infrastructure Secrets
+### Run with Docker
 
-Create a file named exactly **`.env`** in the root of your main project directory to store your structural database configurations:
+From the project root:
 
-```ini
-# --- PostgreSQL Initial Database Secrets ---
-DB_USER=todo_admin
-DB_PASSWORD=secure_dev_password_2026
-DB_NAME=todo_app_db
+```bash
+docker compose up --build -d
 ```
 
-_(Make sure to add `.env` to a root `.gitignore` file immediately so these credentials never hit GitHub)._
+For the production compose file:
 
----
+```bash
+docker compose -f docker-compose.prod.yml up --build -d
+```
 
-### Step 3: Execution & Orchestration Targets
+### Helpful docker commands
 
-#### Target A: Build and Run the Full Stack via Docker (Recommended)
+```bash
+docker compose logs -f
+docker compose down -v
+docker exec -it dev_db psql -U ${DB_USER} -d ${DB_NAME}$ -c "{SQL_COMMAND}"
+```
 
-This path ensures absolute environment parity. The whole platform compiles and runs inside clean virtual networks without polluting your physical host operating system.
+### Test the project
 
-1.  **Boot with Hot-Reloading (Development Mode - Vite + Uvicorn)**
-    Maps your local workspace directories live. Making code edits on your laptop will instantly trigger file-watchers to update your application live:
-
-    ```bash
-    docker compose up --build
-    ```
-
-    - **React Frontend (Vite Dev Server):** `http://localhost:5173`
-    - **FastAPI OpenAPI Playground docs:** `http://localhost:8000/docs`
-
-2.  **Boot in Frozen Production Simulation Mode (Nginx + Clean Uvicorn)**
-    Compiles optimized React assets into raw static directories, discards the Node runtime entirely, and serves the files through Nginx on the standard web channel:
-
-    ```bash
-    docker compose -f docker-compose.prod.yml up --build
-    ```
-
-    - **React Frontend (Served by Nginx):** `http://localhost` (Port 80)
-    - **FastAPI API Gateway:** `http://localhost:8000`
-
-#### Target B: Run the Stack Locally (Native Host Development)
-
-If you prefer running application code servers natively on your machine's hardware while keeping external infrastructure running cleanly in the background:
-
-1.  **Launch PostgreSQL Infrastructure via Docker:**
-
-    ```bash
-    docker compose up db -d
-    ```
-
-    _(The `-d` flag runs the database detached silently in the background)._
-
-2.  **Spin Up the FastAPI Backend Gateway:**
-    ```bash
-    cd backend
-    python -m venv venv
-    source venv/bin/activate  # On Windows use: venv\Scripts\activate
-    pip install -r requirements.txt
-    export DATABASE_URL=postgresql://todo_admin:secure_dev_password_2026@localhost:5432/todo_app_db
-    uvicorn main:app --reload
-    ```
-3.  **Spin Up the React Frontend App:**
-    Open a new terminal tab and execute:
-    ```bash
-    cd frontend
-    npm install
-    npm run dev
-    ```
+```bash
+cd backend
+python -m pytest -q [test/test_endpoints.py] [-k login]
+```
