@@ -8,7 +8,7 @@ from fastapi.testclient import TestClient
 ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "src"))
 sys.path.append(ROOT_DIR)
 
-os.environ.setdefault("JWT_SECRET_KEY", "test-secret")
+os.environ.setdefault("JWT_SECRET_KEY", "default-key")
 os.environ.setdefault("JWT_ALGORITHM", "HS256")
 os.environ.setdefault("JWT_TOKEN_EXPIRE_MINUTES", "60")
 
