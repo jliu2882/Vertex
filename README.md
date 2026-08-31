@@ -1,6 +1,6 @@
 # Vertex
 
-A full-stack task management app built with React/TypeScript, FastAPI, and PostgreSQL. I built it to practice patterns you'd actually see in a production codebase — JWT authentication, async database access, containerized dev/prod environments, and a layered backend structure — rather than just another CRUD tutorial project.
+A full-stack task management app built with React/TypeScript, FastAPI, and PostgreSQL. I built it to practice patterns you'd actually see in a production codebase — JWT authentication, async database access, containerized dev/prod environments, and a layered backend structure — rather than just a CRUD tutorial project.
 
 ## Tech Stack
 
