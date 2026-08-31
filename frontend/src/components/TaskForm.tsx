@@ -32,7 +32,7 @@ function TaskForm({ onSubmit, isSubmitting }: TaskFormProps) {
         placeholder="Description (optional)"
       />
       <button type="submit" disabled={isSubmitting} className="task-form__submit">
-        {isSubmitting ? 'Adding...' : 'Add task'}
+        {isSubmitting ? 'Adding... ' : 'Add task'}
       </button>
     </form>
   )
