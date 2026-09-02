@@ -18,7 +18,6 @@ from src.routes.tasks import get_current_user_id as task_get_current_user_id
 from src.routes.users import get_db as user_get_db
 from src.services.users import create_jwt_token, hash_password
 
-
 class FakeDB:
     def __init__(self):
         self.users = []
