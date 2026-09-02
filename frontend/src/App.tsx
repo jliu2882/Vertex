@@ -14,7 +14,7 @@ function App() {
             <TaskListPage />
         </ProtectedRoute>
       }/>
-      <Route path="/login " element={<LoginPage />} />
+      <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
     </Routes>
   )
