@@ -145,13 +145,11 @@ class FakeDB:
             return sum(1 for task in self.tasks if task["user_id"] == user_id)
         return 0
 
-
 @pytest.fixture
 def client():
     with TestClient(app) as test_client:
         yield test_client
     app.dependency_overrides.clear()
-
 
 def override_get_db(fake_db):
     async def _override():
@@ -159,13 +157,11 @@ def override_get_db(fake_db):
 
     return _override
 
-
 def override_current_user_id(user_id: int):
     async def _override():
         return user_id
 
     return _override
-
 
 def test_register_endpoint_returns_token(client):
     fake_db = FakeDB()
@@ -196,7 +192,6 @@ def test_login_endpoint_returns_token_for_existing_user(client):
     payload = response.json()
     assert payload["token_type"] == "bearer"
     assert payload["access_token"]
-
 
 def test_task_crud_endpoints_work(client):
     fake_db = FakeDB()
@@ -235,7 +230,6 @@ def test_task_crud_endpoints_work(client):
     final_list = client.get("/tasks").json()
     assert final_list["items"] == []
     assert final_list["total"] == 0
-
 
 def test_tasks_endpoint_rejects_invalid_token(client):
     fake_db = FakeDB()
